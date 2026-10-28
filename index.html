@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>L'Œil du Numérique - Newsletter</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="bg-image"></div>
+
+  <main class="card">
+    <div class="logo-container">
+      <img src="pawp.png" alt="L'Œil du Numérique" class="logo">
+    </div>
+
+    <h1>L'Œil du Numérique</h1>
+    <p class="subtitle">Recevez l'essentiel de l'actualité tech, sans le bruit.</p>
+
+    <form id="form-inscription" novalidate>
+      <div class="field">
+        <label for="nom">Nom</label>
+        <input type="text" id="nom" name="nom" placeholder="Votre nom" required autocomplete="name">
+      </div>
+
+      <div class="field">
+        <label for="email">Adresse email</label>
+        <input type="email" id="email" name="email" placeholder="vous@exemple.com" required autocomplete="email">
+      </div>
+
+      <button type="submit" id="btn-submit">S'abonner</button>
+    </form>
+
+    <p id="message" class="message" role="status" aria-live="polite"></p>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
