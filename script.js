@@ -27,15 +27,13 @@ form.addEventListener('submit', async (e) => {
   afficherMessage('');
 
   try {
-    const params = new URLSearchParams();
-    params.append('action', 'inscription');
-    params.append('nom', nom);
-    params.append('email', email);
+    // Modification : Construction manuelle de la chaîne de caractères
+    const bodyData = `action=inscription&nom=${encodeURIComponent(nom)}&email=${encodeURIComponent(email)}`;
 
     const res = await fetch(API_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: params.toString()
+      body: bodyData
     });
 
     const data = await res.json();
