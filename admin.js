@@ -83,15 +83,14 @@ async function seConnecter() {
   const erreurEl = document.getElementById('login-erreur');
   erreurEl.textContent = '';
 
-  const params = new URLSearchParams();
-  params.append('action', 'verifierAdmin');
-  params.append('mdp', mdp);
-
   try {
+    // Modification : Construction manuelle
+    const bodyData = `action=verifierAdmin&mdp=${encodeURIComponent(mdp)}`;
+
     const res = await fetch(API_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: params.toString()
+      body: bodyData
     });
     const data = await res.json();
 
@@ -127,16 +126,13 @@ async function envoyerMaintenant() {
   afficherStatus('Envoi en cours…');
 
   try {
-    const params = new URLSearchParams();
-    params.append('action', 'envoyer');
-    params.append('mdp', MOT_DE_PASSE);
-    params.append('sujet', sujet);
-    params.append('contenu', contenu);
+    // Modification : Construction manuelle
+    const bodyData = `action=envoyer&mdp=${encodeURIComponent(MOT_DE_PASSE)}&sujet=${encodeURIComponent(sujet)}&contenu=${encodeURIComponent(contenu)}`;
 
     const res = await fetch(API_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: params.toString()
+      body: bodyData
     });
     const data = await res.json();
 
@@ -159,17 +155,13 @@ async function programmerEnvoi() {
   afficherStatus('Programmation…');
 
   try {
-    const params = new URLSearchParams();
-    params.append('action', 'programmer');
-    params.append('mdp', MOT_DE_PASSE);
-    params.append('sujet', sujet);
-    params.append('contenu', contenu);
-    params.append('dateEnvoi', dateEnvoi);
+    // Modification : Construction manuelle
+    const bodyData = `action=programmer&mdp=${encodeURIComponent(MOT_DE_PASSE)}&sujet=${encodeURIComponent(sujet)}&contenu=${encodeURIComponent(contenu)}&dateEnvoi=${encodeURIComponent(dateEnvoi)}`;
 
     const res = await fetch(API_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: params.toString()
+      body: bodyData
     });
     const data = await res.json();
 
