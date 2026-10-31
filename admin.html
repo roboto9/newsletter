@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin - L'Œil du Numérique</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .admin-container { max-width: 900px; width: 100%; z-index: 1; }
+    .templates-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .template-btn {
+      background: #f1f5f9;
+      border: 1px solid #cbd5e1;
+      padding: 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      text-align: left;
+      transition: 0.2s;
+      color: #0f172a;
+    }
+    .template-btn:hover { background: #e2e8f0; border-color: #2563eb; }
+    textarea {
+      width: 100%;
+      height: 300px;
+      font-family: monospace;
+      font-size: 0.85rem;
+      padding: 10px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      box-sizing: border-box;
+    }
+    .form-row { display: flex; gap: 15px; margin-bottom: 15px; flex-wrap: wrap; }
+    .form-row > * { flex: 1; min-width: 200px; }
+
+    .welcome-box {
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      border-radius: 10px;
+      padding: 18px 20px;
+      margin-bottom: 25px;
+    }
+    .welcome-box h2 { font-size: 1.05rem; color: #0f172a; margin-bottom: 6px; }
+    .welcome-box p  { font-size: .88rem; color: #475569; margin-bottom: 12px; }
+    .welcome-row { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+    .welcome-row input[type="checkbox"] { width: 18px; height: 18px; padding: 0; }
+    .welcome-row label { margin: 0; cursor: pointer; }
+    #btn-bienvenue { background: #16a34a; }
+    #btn-bienvenue:hover:not(:disabled) { background: #15803d; }
+
+    #login-box {
+      max-width: 380px;
+      margin: 80px auto;
+      padding: 30px;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.15);
+      position: relative;
+      z-index: 1;
+    }
+    #login-box h2 { margin-top: 0; color: #0f172a; }
+    #login-box input {
+      width: 100%;
+      padding: 12px;
+      margin: 15px 0;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      box-sizing: border-box;
+      font-size: 1rem;
+    }
+    #login-box button {
+      width: 100%;
+      padding: 12px;
+      background: #2563eb;
+      color: #fff;
+      border: 0;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 1rem;
+    }
+    #login-box button:hover { background: #1d4ed8; }
+    #login-erreur { color: #dc2626; font-size: .9rem; margin-top: 10px; }
+  </style>
+</head>
+<body>
+  <div class="bg-image"></div>
+
+  <!-- Bloc de connexion -->
+  <div id="login-box">
+    <h2>🔒 Accès réservé</h2>
+    <p style="color:#64748b;font-size:.95rem;">Entrez le mot de passe administrateur.</p>
+
+    <form id="form-login">
+      <input type="password" id="mdp-admin" name="mdp" placeholder="Mot de passe" required>
+      <button type="submit">Se connecter</button>
+    </form>
+
+    <p id="login-erreur"></p>
+  </div>
+
+  <!-- Interface admin (masquée au départ) -->
+  <div id="admin-app" style="display:none;">
+    <div class="card admin-container">
+
+      <!-- Mail de bienvenue -->
+      <div class="welcome-box">
+        <h2>👋 Mail de bienvenue</h2>
+        <p>Envoyé une seule fois à chaque abonné. Les personnes qui l'ont déjà reçu ne sont jamais recontactées.</p>
+
+        <div class="welcome-row">
+          <input type="checkbox" id="auto-bienvenue">
+          <label for="auto-bienvenue">Envoyer automatiquement à chaque nouvelle inscription</label>
+        </div>
+
+        <button type="button" id="btn-bienvenue">Envoyer aux nouveaux abonnés</button>
+        <p id="bienvenue-status" class="message"></p>
+      </div>
+
+      <h1>Rédiger une Newsletter</h1>
+
+      <div class="field">
+        <label>Choisir un modèle de style :</label>
+        <div class="templates-grid" id="templates-grid"></div>
+      </div>
+
+      <form id="form-envoi">
+        <!-- L'action sera modifiée par le JS selon le bouton cliqué -->
+        <input type="hidden" name="action" id="form-action" value="envoyer">
+        <input type="hidden" name="mdp" id="form-mdp" value="">
+
+        <div class="form-row">
+          <div class="field">
+            <label>Objet de l'email</label>
+            <input type="text" id="sujet" name="sujet" placeholder="Ex: Les actualités de la semaine" required>
+          </div>
+          <div class="field">
+            <label>Date d'envoi (optionnel)</label>
+            <input type="datetime-local" id="dateEnvoi" name="dateEnvoi">
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Contenu HTML de l'email :</label>
+          <textarea id="contenu" name="contenu" placeholder="Sélectionnez un modèle ou écrivez votre HTML..." required></textarea>
+        </div>
+
+        <div style="display: flex; gap: 10px;">
+          <button type="submit" onclick="preparerEnvoi('envoyer')" style="flex: 1;">Envoyer maintenant</button>
+          <button type="submit" onclick="preparerEnvoi('programmer')" style="flex: 1; background: #0f172a;">Programmer</button>
+        </div>
+      </form>
+
+      <p id="status" class="message"></p>
+    </div>
+  </div>
+
+  <script src="admin.js"></script>
+</body>
+</html>
